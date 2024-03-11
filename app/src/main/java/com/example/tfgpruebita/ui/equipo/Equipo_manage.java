@@ -119,16 +119,139 @@ public class Equipo_manage extends Fragment {
         txtportero= binding.txtportero;
 
         portero.setOnClickListener(v -> mostrarMenuPorteros(v, txtportero, portero));
+        defensa1.setOnClickListener(v -> mostrarMenuDefensas(v, txtdefensa1, defensa1));
+        defensa2.setOnClickListener(v -> mostrarMenuDefensas(v, txtdefensa2, defensa2));
+        defensa3.setOnClickListener(v -> mostrarMenuDefensas(v, txtdefensa3, defensa3));
+        defensa4.setOnClickListener(v -> mostrarMenuDefensas(v, txtdefensa4, defensa4));
+        defensa5.setOnClickListener(v -> mostrarMenuDefensas(v, txtdefensa5, defensa5));
+        medio1.setOnClickListener(v -> mostrarMenuMedios(v, txtmedio1, medio1));
+        medio2.setOnClickListener(v -> mostrarMenuMedios(v, txtmedio2, medio2));
+        medio3.setOnClickListener(v -> mostrarMenuMedios(v, txtmedio3, medio3));
+        medio4.setOnClickListener(v -> mostrarMenuMedios(v, txtmedio4, medio4));
+        medio5.setOnClickListener(v -> mostrarMenuMedios(v, txtmedio5, medio5));
+        delantero1.setOnClickListener(v -> mostrarMenuDelanteros(v, txtdelantero1, delantero1));
+        delantero2.setOnClickListener(v -> mostrarMenuDelanteros(v, txtdelantero2, delantero2));
+        delantero3.setOnClickListener(v -> mostrarMenuDelanteros(v, txtdelantero3, delantero3));
 
         Button button = binding.button;
+        Button button1 = binding.btnGuardar;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    listaFormaciones(v);
+                    listaFormaciones(v, button);
+            }
+        });
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button.setEnabled(false);
             }
         });
 
         return root;
+    }
+
+    private void mostrarMenuDelanteros(View v, TextView textView, ImageView imageView) {
+        db.collection("jugadores")
+                .whereEqualTo("Posicion", "Delantero")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                    List<DocumentSnapshot> jugadoresList = queryDocumentSnapshots.getDocuments();
+                    Log.i("Equipo_manage", "Cantidad de jugadores: " + jugadoresList.size());
+                    Collections.shuffle(jugadoresList);
+                    List<DocumentSnapshot> jugadoresLimitados = jugadoresList.subList(0, Math.min(jugadoresList.size(), 5));
+
+                    for (DocumentSnapshot document : jugadoresLimitados) {
+                        String nombreJugador = document.getString("Nombre");
+                        if (nombreJugador != null) {
+                            popupMenu.getMenu().add(Menu.NONE, Menu.NONE, jugadoresList.indexOf(document), nombreJugador);
+                        }
+                    }
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        String jugadorSeleccionado = item.getTitle().toString();
+                        textView.setText(jugadorSeleccionado);
+                        imageView.setEnabled(false);
+
+                        return true;
+                    });
+                    Log.i("Equipo_manage", "Mostrando menú emergente");
+                    popupMenu.show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Error", "Error al obtener jugadores: " + e.getMessage());
+                    e.printStackTrace();
+                });
+    }
+
+    private void mostrarMenuMedios(View v, TextView textView, ImageView imageView) {
+        db.collection("jugadores")
+                .whereEqualTo("Posicion", "Mediocentro")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                    List<DocumentSnapshot> jugadoresList = queryDocumentSnapshots.getDocuments();
+                    Log.i("Equipo_manage", "Cantidad de jugadores: " + jugadoresList.size());
+                    Collections.shuffle(jugadoresList);
+                    List<DocumentSnapshot> jugadoresLimitados = jugadoresList.subList(0, Math.min(jugadoresList.size(), 5));
+
+                    for (DocumentSnapshot document : jugadoresLimitados) {
+                        String nombreJugador = document.getString("Nombre");
+                        if (nombreJugador != null) {
+                            popupMenu.getMenu().add(Menu.NONE, Menu.NONE, jugadoresList.indexOf(document), nombreJugador);
+                        }
+                    }
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        String jugadorSeleccionado = item.getTitle().toString();
+                        textView.setText(jugadorSeleccionado);
+                        imageView.setEnabled(false);
+
+                        return true;
+                    });
+                    Log.i("Equipo_manage", "Mostrando menú emergente");
+                    popupMenu.show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Error", "Error al obtener jugadores: " + e.getMessage());
+                    e.printStackTrace();
+                });
+    }
+
+    private void mostrarMenuDefensas(View v, TextView textView, ImageView imageView) {
+        db.collection("jugadores")
+                .whereEqualTo("Posicion", "Defensa")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                    List<DocumentSnapshot> jugadoresList = queryDocumentSnapshots.getDocuments();
+                    Log.i("Equipo_manage", "Cantidad de jugadores: " + jugadoresList.size());
+                    Collections.shuffle(jugadoresList);
+                    List<DocumentSnapshot> jugadoresLimitados = jugadoresList.subList(0, Math.min(jugadoresList.size(), 5));
+
+                    for (DocumentSnapshot document : jugadoresLimitados) {
+                        String nombreJugador = document.getString("Nombre");
+                        if (nombreJugador != null) {
+                            popupMenu.getMenu().add(Menu.NONE, Menu.NONE, jugadoresList.indexOf(document), nombreJugador);
+                        }
+                    }
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        String jugadorSeleccionado = item.getTitle().toString();
+                        textView.setText(jugadorSeleccionado);
+                        imageView.setEnabled(false);
+
+                        return true;
+                    });
+                    Log.i("Equipo_manage", "Mostrando menú emergente");
+                    popupMenu.show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Error", "Error al obtener jugadores: " + e.getMessage());
+                    e.printStackTrace();
+                });
     }
 
     private void mostrarMenuPorteros(View v, TextView txtportero, ImageView imageView) {
@@ -166,7 +289,7 @@ public class Equipo_manage extends Fragment {
                 });
     }
 
-    private void listaFormaciones(View view) {
+    private void listaFormaciones(View view, Button button) {
         Log.d("lista", "lista");
         PopupMenu popupMenu = new PopupMenu(requireContext(), view);
         MenuInflater inflater = popupMenu.getMenuInflater();
@@ -181,14 +304,17 @@ public class Equipo_manage extends Fragment {
                     case FORMACION_433:
                         Toast.makeText(requireContext(), "FORMACION ELEGIDA!", Toast.LENGTH_SHORT).show();
                         ajustarMargenesFormacion433();
+                        button.setText("4-3-3");
                         return true;
                     case FORMACION_442:
                         Toast.makeText(requireContext(), "FORMACION ELEGIDA!", Toast.LENGTH_SHORT).show();
                         ajustarMargenesFormacion442();
+                        button.setText("4-4-2");
                         return true;
                     case FORMACION_343:
                         Toast.makeText(requireContext(), "FORMACION ELEGIDA!", Toast.LENGTH_SHORT).show();
                         ajustarMargenesFormacion343();
+                        button.setText("3-4-3");
                         return true;
                     default:
                         return false;
