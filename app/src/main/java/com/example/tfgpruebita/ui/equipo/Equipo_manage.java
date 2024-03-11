@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +20,15 @@ import android.widget.Toast;
 
 import com.example.tfgpruebita.R;
 import com.example.tfgpruebita.databinding.FragmentEquipoManageBinding;
+import com.example.tfgpruebita.modelo.Jugador;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Equipo_manage extends Fragment {
@@ -29,7 +37,7 @@ public class Equipo_manage extends Fragment {
     private static final String FORMACION_442 = "4-4-2";
     private static final String FORMACION_343 = "3-4-3";
 
-    private Map<Integer, int[]> posicionesOriginales;
+    private FirebaseFirestore db;
 
     ImageView delantero2;
     ImageView delantero1;
@@ -44,6 +52,7 @@ public class Equipo_manage extends Fragment {
     ImageView defensa4;
     ImageView defensa3;
     ImageView defensa5;
+    ImageView portero;
     TextView txtdelantero2;
     TextView txtdelantero1;
     TextView txtdelantero3;
@@ -57,6 +66,7 @@ public class Equipo_manage extends Fragment {
     TextView txtdefensa4;
     TextView txtdefensa1;
     TextView txtdefensa5;
+    TextView txtportero;
 
 
     public Equipo_manage() {
@@ -75,6 +85,10 @@ public class Equipo_manage extends Fragment {
         FragmentEquipoManageBinding binding = FragmentEquipoManageBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        db = FirebaseFirestore.getInstance();
+
+        Log.e("Base: ", db.toString());
+
         delantero2 = binding.delantero2;
         delantero1 = binding.delantero1;
         delantero3 = binding.delantero3;
@@ -88,6 +102,7 @@ public class Equipo_manage extends Fragment {
         defensa4 = binding.defensa4;
         defensa3 = binding.defensa3;
         defensa5 = binding.defensa5;
+        portero = binding.portero;
         txtdelantero2 = binding.txtdelantero2;
         txtdelantero1 = binding.txtdelantero1;
         txtdelantero3 = binding.txtdelantero3;
@@ -101,6 +116,9 @@ public class Equipo_manage extends Fragment {
         txtdefensa4 = binding.txtdefensa4;
         txtdefensa1 = binding.txtdefensa1;
         txtdefensa5= binding.txtdefensa5;
+        txtportero= binding.txtportero;
+
+        portero.setOnClickListener(v -> mostrarMenuPorteros(v, txtportero, portero));
 
         Button button = binding.button;
         button.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +131,40 @@ public class Equipo_manage extends Fragment {
         return root;
     }
 
+    private void mostrarMenuPorteros(View v, TextView txtportero, ImageView imageView) {
+
+        db.collection("jugadores")
+                .whereEqualTo("Posicion", "Portero")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                    List<DocumentSnapshot> jugadoresList = queryDocumentSnapshots.getDocuments();
+                    Log.i("Equipo_manage", "Cantidad de jugadores: " + jugadoresList.size());
+                    Collections.shuffle(jugadoresList);
+                    List<DocumentSnapshot> jugadoresLimitados = jugadoresList.subList(0, Math.min(jugadoresList.size(), 5));
+
+                    for (DocumentSnapshot document : jugadoresLimitados) {
+                        String nombreJugador = document.getString("Nombre");
+                        if (nombreJugador != null) {
+                            popupMenu.getMenu().add(Menu.NONE, Menu.NONE, jugadoresList.indexOf(document), nombreJugador);
+                        }
+                    }
+
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        String jugadorSeleccionado = item.getTitle().toString();
+                        txtportero.setText(jugadorSeleccionado);
+                        imageView.setEnabled(false);
+
+                        return true;
+                    });
+                    Log.i("Equipo_manage", "Mostrando menú emergente");
+                    popupMenu.show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Error", "Error al obtener jugadores: " + e.getMessage());
+                    e.printStackTrace();
+                });
+    }
 
     private void listaFormaciones(View view) {
         Log.d("lista", "lista");
