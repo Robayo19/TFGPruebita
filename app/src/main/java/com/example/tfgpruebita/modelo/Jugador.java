@@ -3,13 +3,13 @@ package com.example.tfgpruebita.modelo;
 public class Jugador {
 
     private int id;
-    private String nombre;
-    private String equipo;
+    private String Nombre;
+    private String Equipo;
     private int goles;
     private int asistencias;
     private String estadoSalud;
     private boolean mvp;
-    private String posicion;
+    private String Posicion;
     private String valor;
     private int puntosJornada;
     private int puntosTotales;
@@ -26,19 +26,19 @@ public class Jugador {
     }
 
     public String getNombre() {
-        return nombre;
+        return Nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.Nombre = nombre;
     }
 
     public String getEquipo() {
-        return equipo;
+        return Equipo;
     }
 
     public void setEquipo(String equipo) {
-        this.equipo = equipo;
+        this.Equipo = equipo;
     }
 
     public int getGoles() {
@@ -74,11 +74,11 @@ public class Jugador {
     }
 
     public String getPosicion() {
-        return posicion;
+        return Posicion;
     }
 
     public void setPosicion(String posicion) {
-        this.posicion = posicion;
+        this.Posicion = posicion;
     }
 
     public String getValor() {
@@ -109,13 +109,13 @@ public class Jugador {
     public String toString() {
         return "Jugador{" +
                 "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", equipo='" + equipo + '\'' +
+                ", nombre='" + Nombre + '\'' +
+                ", equipo='" + Equipo + '\'' +
                 ", goles=" + goles +
                 ", asistencias=" + asistencias +
                 ", estadoSalud='" + estadoSalud + '\'' +
                 ", mvp=" + mvp +
-                ", posicion='" + posicion + '\'' +
+                ", posicion='" + Posicion + '\'' +
                 ", valor='" + valor + '\'' +
                 ", puntosJornada=" + puntosJornada +
                 ", puntosTotales=" + puntosTotales +

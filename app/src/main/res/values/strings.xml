@@ -8,5 +8,5 @@
     <string name="title_league">League</string>
     <string name="title_team">Team</string>
     <string name="title_Transfers">Transfers</string>
-    <string name="title_Friends">Friends</string>
+    <string name="title_Friends">AdminPage</string>
 </resources>

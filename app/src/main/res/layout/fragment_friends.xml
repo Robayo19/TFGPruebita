@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="Lista de Usuarios"
+        android:text="Usuarios:"
         android:textSize="30dp" />
 
 

@@ -1,5 +1,8 @@
 package com.example.tfgpruebita.ui.equipo;
 
+import static com.google.common.reflect.Reflection.getPackageName;
+
+import android.app.AlertDialog;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -87,7 +90,7 @@ public class Equipo_manage extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-        Log.e("Base: ", db.toString());
+        Log.e("Equipo_manage: ", db.toString());
 
         delantero2 = binding.delantero2;
         delantero1 = binding.delantero1;
@@ -115,8 +118,8 @@ public class Equipo_manage extends Fragment {
         txtdefensa3 = binding.txtdefensa3;
         txtdefensa4 = binding.txtdefensa4;
         txtdefensa1 = binding.txtdefensa1;
-        txtdefensa5= binding.txtdefensa5;
-        txtportero= binding.txtportero;
+        txtdefensa5 = binding.txtdefensa5;
+        txtportero = binding.txtportero;
 
         portero.setOnClickListener(v -> mostrarMenuPorteros(v, txtportero, portero));
         defensa1.setOnClickListener(v -> mostrarMenuDefensas(v, txtdefensa1, defensa1));
@@ -173,6 +176,9 @@ public class Equipo_manage extends Fragment {
                     popupMenu.setOnMenuItemClickListener(item -> {
                         String jugadorSeleccionado = item.getTitle().toString();
                         textView.setText(jugadorSeleccionado);
+                        String nombreJugador = jugadorSeleccionado.toLowerCase();
+                        int idDrawable = getResources().getIdentifier(nombreJugador, "drawable", requireActivity().getPackageName());
+                        imageView.setImageResource(idDrawable);
                         imageView.setEnabled(false);
 
                         return true;
@@ -207,6 +213,9 @@ public class Equipo_manage extends Fragment {
                     popupMenu.setOnMenuItemClickListener(item -> {
                         String jugadorSeleccionado = item.getTitle().toString();
                         textView.setText(jugadorSeleccionado);
+                        String nombreJugador = jugadorSeleccionado.toLowerCase();
+                        int idDrawable = getResources().getIdentifier(nombreJugador, "drawable", requireActivity().getPackageName());
+                        imageView.setImageResource(idDrawable);
                         imageView.setEnabled(false);
 
                         return true;
@@ -241,6 +250,9 @@ public class Equipo_manage extends Fragment {
                     popupMenu.setOnMenuItemClickListener(item -> {
                         String jugadorSeleccionado = item.getTitle().toString();
                         textView.setText(jugadorSeleccionado);
+                        String nombreJugador = jugadorSeleccionado.toLowerCase();
+                        int idDrawable = getResources().getIdentifier(nombreJugador, "drawable", requireActivity().getPackageName());
+                        imageView.setImageResource(idDrawable);
                         imageView.setEnabled(false);
 
                         return true;
@@ -276,6 +288,9 @@ public class Equipo_manage extends Fragment {
                     popupMenu.setOnMenuItemClickListener(item -> {
                         String jugadorSeleccionado = item.getTitle().toString();
                         txtportero.setText(jugadorSeleccionado);
+                        String nombreJugador = jugadorSeleccionado.toLowerCase();
+                        int idDrawable = getResources().getIdentifier(nombreJugador, "drawable", requireActivity().getPackageName());
+                        imageView.setImageResource(idDrawable);
                         imageView.setEnabled(false);
 
                         return true;
