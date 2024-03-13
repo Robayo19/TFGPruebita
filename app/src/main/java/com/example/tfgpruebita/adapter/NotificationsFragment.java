@@ -1,6 +1,8 @@
 package com.example.tfgpruebita.adapter;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import java.util.List;
 public class NotificationsFragment extends Fragment {
 
     private List<Jugador> jugadorList;
+    private List<Jugador> filteredJugadorList;
     private JugadorAdapter jugadorAdapter;
     private RecyclerView recyclerViewPlayers;
     private EditText editTextSearch;
@@ -47,12 +50,26 @@ public class NotificationsFragment extends Fragment {
         editTextSearch = root.findViewById(R.id.editTextSearch);
 
         jugadorList = new ArrayList<>();
+        filteredJugadorList = new ArrayList<>();
 
         obtenerJugadoresDesdeFirestore();
 
-        jugadorAdapter = new JugadorAdapter(requireContext(), jugadorList);
+        jugadorAdapter = new JugadorAdapter(requireContext(), filteredJugadorList);
         recyclerViewPlayers.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerViewPlayers.setAdapter(jugadorAdapter);
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterJugadores(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         return root;
     }
@@ -65,7 +82,7 @@ public class NotificationsFragment extends Fragment {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Jugador jugador = document.toObject(Jugador.class);
                             jugadorList.add(jugador);
-                            Log.d("NotificationsFragment", "Jugador obtenido: " + jugador.getNombre());
+                            filteredJugadorList.add(jugador);
                         }
                         jugadorAdapter.notifyDataSetChanged();
                     } else {
@@ -74,4 +91,20 @@ public class NotificationsFragment extends Fragment {
                     }
                 });
     }
+
+    private void filterJugadores(String searchText) {
+        filteredJugadorList.clear();
+
+        if (searchText != null) {
+            for (Jugador jugador : jugadorList) {
+                String nombreJugador = jugador.getNombre();
+                if (nombreJugador != null && nombreJugador.toLowerCase().contains(searchText.toLowerCase())) {
+                    filteredJugadorList.add(jugador);
+                }
+            }
+        }
+
+        jugadorAdapter.notifyDataSetChanged();
+}
+
 }

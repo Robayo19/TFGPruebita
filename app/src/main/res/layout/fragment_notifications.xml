@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".adapter.NotificationsFragment">
 
+
     <EditText
         android:id="@+id/editTextSearch"
         android:layout_width="379dp"

@@ -1,10 +1,12 @@
 package com.example.tfgpruebita.ui.friends;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,8 +28,11 @@ import com.example.tfgpruebita.R;
 import com.example.tfgpruebita.databinding.FragmentEquipoManageBinding;
 import com.example.tfgpruebita.databinding.FragmentFriendsBinding;
 import com.example.tfgpruebita.modelo.Persona;
+import com.example.tfgpruebita.ui.LoginRegister.Login;
 import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +53,9 @@ public class Friends extends Fragment {
     private List<Persona> listaPersona = new ArrayList<>();
     private ArrayAdapter<Persona> arrayAdapter;
 
-    private EditText nombre, edad, correo, contrasena;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    private EditText nombre, correo, contrasena;
     private ListView listViewUsuarios;
 
     private FirebaseFirestore db;
@@ -64,8 +71,13 @@ public class Friends extends Fragment {
         FragmentFriendsBinding binding = FragmentFriendsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        String idUser = user.getUid();
+
+        if (!idUser.equals("6ylJgT6SE0hFXypAGxu8P6Bb2iL2")) {
+            NavHostFragment.findNavController(this).navigate(R.id.action_friends_to_homeFragment);
+        }
+
         nombre = binding.txtNombrePersona;
-        edad = binding.txtEdadPersona;
         correo = binding.txtCorreoPersona;
         contrasena = binding.txtContrasenaPersona;
         listViewUsuarios = binding.listaDatos;
@@ -79,7 +91,6 @@ public class Friends extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 personaSeleccionada = (Persona) parent.getItemAtPosition(position);
                 nombre.setText(personaSeleccionada.getNombre());
-                edad.setText(Integer.toString(personaSeleccionada.getEdad()));
                 correo.setText(personaSeleccionada.getCorreo());
                 contrasena.setText(personaSeleccionada.getContrasena());
                 Log.e("Impresion persona:", personaSeleccionada.toString());
@@ -126,7 +137,6 @@ public class Friends extends Fragment {
 
         popupMenu.setOnMenuItemClickListener(item -> {
             String nombre1 = nombre.getText().toString();
-            String edad1 = edad.getText().toString();
             String correo1 = correo.getText().toString();
             String contra1 = contrasena.getText().toString();
             String eleccion = item.getTitle().toString();
@@ -134,7 +144,7 @@ public class Friends extends Fragment {
             switch (eleccion) {
                 case ICON_ADD_ID:
                     if (validarCampos()) {
-                        agregarPersona(nombre1, Integer.parseInt(edad1), correo1, contra1);
+                        agregarPersona(nombre1, correo1, contra1);
                         Toast.makeText(requireContext(), "Agregar", Toast.LENGTH_LONG).show();
                         limpiar();
                     } else {
@@ -142,15 +152,14 @@ public class Friends extends Fragment {
                     }
                     break;
                 case ICON_SAVE_ID:
-                    int edaddd = Integer.parseInt(edad.getText().toString().trim());
                     Persona p = new Persona();
                     if(personaSeleccionada != null && personaSeleccionada.getId() != null) {
                         p.setId(personaSeleccionada.getId());
                         p.setNombre(nombre.getText().toString().trim());
-                        p.setEdad(edaddd);
                         p.setCorreo(correo.getText().toString().trim());
                         p.setContrasena(contrasena.getText().toString().trim());
                         actualizaPersona(p);
+                        limpiar();
                     } else {
                         Log.e("Friends", "personaSeleccionada es null o su ID es null");
                         Toast.makeText(requireContext(), "Selecciona una persona válida antes de actualizar", Toast.LENGTH_LONG).show();
@@ -161,6 +170,7 @@ public class Friends extends Fragment {
                     if (personaSeleccionada != null && personaSeleccionada.getId() != null) {
                         eliminarPersona(personaSeleccionada.getId());
                         Toast.makeText(requireContext(), "Eliminar", Toast.LENGTH_LONG).show();
+                        limpiar();
                     } else {
                         Log.e("Friends", "personaSeleccionada es null o su ID es null");
                         Toast.makeText(requireContext(), "Selecciona una persona válida antes de eliminar", Toast.LENGTH_LONG).show();
@@ -201,7 +211,6 @@ public class Friends extends Fragment {
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("nombre", p.getNombre());
-        updates.put("edad", p.getEdad());
         updates.put("correo", p.getCorreo());
         updates.put("contrasena", p.getContrasena());
 
@@ -215,10 +224,9 @@ public class Friends extends Fragment {
                 });
     }
 
-    private void agregarPersona(String nombre, int edad, String correo, String contra) {
+    private void agregarPersona(String nombre, String correo, String contra) {
         Persona p = new Persona();
         p.setNombre(nombre);
-        p.setEdad(edad);
         p.setCorreo(correo);
         p.setContrasena(contra);
 
@@ -234,14 +242,12 @@ public class Friends extends Fragment {
 
     private void limpiar() {
         nombre.setText("");
-        edad.setText("");
         correo.setText("");
         contrasena.setText("");
     }
 
     private boolean validarCampos() {
         return !nombre.getText().toString().isEmpty() &&
-                !edad.getText().toString().isEmpty() &&
                 !correo.getText().toString().isEmpty() &&
                 !contrasena.getText().toString().isEmpty();
     }

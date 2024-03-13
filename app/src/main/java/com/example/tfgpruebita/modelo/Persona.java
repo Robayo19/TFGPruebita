@@ -4,7 +4,6 @@ public class Persona {
 
     private String id;
     private String nombre;
-    private int edad;
     private String correo;
     private String contrasena;
 
@@ -27,14 +26,6 @@ public class Persona {
         this.nombre = nombre;
     }
 
-    public int getEdad() {
-        return edad;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
     public String getCorreo() {
         return correo;
     }
@@ -55,7 +46,6 @@ public class Persona {
     public String toString() {
         return "Id:" + id +
                 ". Nombre: " + nombre +
-                ", Edad: " + edad +
                 ", Correo: " + correo +
                 ", Contraseña: " + contrasena;
     }

@@ -17,19 +17,46 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfgpruebita.R;
 import com.example.tfgpruebita.databinding.FragmentHomeBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 public class HomeFragment extends Fragment {
 
+
     private FragmentHomeBinding binding;
+    private FirebaseAuth mAuth;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+    private String correo;
+
+    TextView textView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        Bundle args = getArguments();
+        if (args != null) {
+            correo = args.getString("correo");
+        }
+        textView = root.findViewById(R.id.textUserInfo);
+        textView.setText(user.getEmail().toString());
+
         seleccionEquipo();
 
         return root;
+    }
+
+    public static HomeFragment newInstance(String correo) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString("correo", correo);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private void seleccionEquipo() {

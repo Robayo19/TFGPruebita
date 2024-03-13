@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,15 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfgpruebita.MainActivity;
 import com.example.tfgpruebita.R;
+import com.example.tfgpruebita.modelo.Persona;
+import com.example.tfgpruebita.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
     private EditText nombreLoginEditText, contrasenaLoginEditText;
     private Button loginButton;
+
+    public static String correoPasar;
 
     private FirebaseAuth mAuth;
 
@@ -52,8 +58,9 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
 
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            //Toast.makeText(Login.this, "Inicio de sesión exitoso "+mAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish();
                         } else {
