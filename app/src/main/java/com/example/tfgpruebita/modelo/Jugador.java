@@ -17,6 +17,21 @@ public class Jugador {
     public Jugador() {
     }
 
+    public Jugador(String Nombre, String Equipo, int goles, int asistencias, String estadoSalud, boolean mvp, String Posicion, String valor, int puntosJornada, int puntosTotales) {
+        this.Nombre = Nombre;
+        this.Equipo = Equipo;
+        this.goles = goles;
+        this.asistencias = asistencias;
+        this.estadoSalud = estadoSalud;
+        this.mvp = mvp;
+        this.Posicion = Posicion;
+        this.valor = valor;
+        this.puntosJornada = puntosJornada;
+        this.puntosTotales = puntosTotales;
+    }
+
+
+
     public int getId() {
         return id;
     }
@@ -119,6 +134,6 @@ public class Jugador {
                 ", valor='" + valor + '\'' +
                 ", puntosJornada=" + puntosJornada +
                 ", puntosTotales=" + puntosTotales +
-                '}';
-    }
+            '}';
+}
 }

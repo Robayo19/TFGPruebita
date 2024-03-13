@@ -21,6 +21,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tfgpruebita.MainActivity;
 import com.example.tfgpruebita.R;
 import com.example.tfgpruebita.databinding.FragmentEquipoManageBinding;
 import com.example.tfgpruebita.modelo.Jugador;
@@ -70,6 +71,10 @@ public class Equipo_manage extends Fragment {
     TextView txtdefensa1;
     TextView txtdefensa5;
     TextView txtportero;
+
+    private ArrayList<TextView> listaJugadoresPartido = new ArrayList<>();
+
+    private ArrayList<String> listaJugaSimular = new ArrayList<>();
 
 
     public Equipo_manage() {
@@ -136,12 +141,27 @@ public class Equipo_manage extends Fragment {
         delantero2.setOnClickListener(v -> mostrarMenuDelanteros(v, txtdelantero2, delantero2));
         delantero3.setOnClickListener(v -> mostrarMenuDelanteros(v, txtdelantero3, delantero3));
 
+        listaJugadoresPartido.add(txtdelantero1);
+        listaJugadoresPartido.add(txtdelantero2);
+        listaJugadoresPartido.add(txtdelantero3);
+        listaJugadoresPartido.add(txtmedio1);
+        listaJugadoresPartido.add(txtmedio2);
+        listaJugadoresPartido.add(txtmedio3);
+        listaJugadoresPartido.add(txtmedio4);
+        listaJugadoresPartido.add(txtmedio5);
+        listaJugadoresPartido.add(txtdefensa1);
+        listaJugadoresPartido.add(txtdefensa2);
+        listaJugadoresPartido.add(txtdefensa3);
+        listaJugadoresPartido.add(txtdefensa4);
+        listaJugadoresPartido.add(txtdefensa5);
+        listaJugadoresPartido.add(txtportero);
+
         Button button = binding.button;
         Button button1 = binding.btnGuardar;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    listaFormaciones(v, button);
+                listaFormaciones(v, button);
             }
         });
 
@@ -149,6 +169,13 @@ public class Equipo_manage extends Fragment {
             @Override
             public void onClick(View v) {
                 button.setEnabled(false);
+                for (TextView txt : listaJugadoresPartido) {
+                    if (!txt.getText().toString().equals("Elige")) {
+                        listaJugaSimular.add(txt.getText().toString());
+                    }
+                }
+                MainActivity.lista = listaJugaSimular;
+                Log.i("once: ", listaJugaSimular.toString());
             }
         });
 
@@ -425,6 +452,6 @@ public class Equipo_manage extends Fragment {
         txtdefensa1.setVisibility(View.VISIBLE);
         txtdefensa4.setVisibility(View.VISIBLE);
         txtdefensa5.setVisibility(View.VISIBLE);
-    }
+}
 
 }

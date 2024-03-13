@@ -1,6 +1,9 @@
 package com.example.tfgpruebita.ui.home;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfgpruebita.R;
 import com.example.tfgpruebita.databinding.FragmentHomeBinding;
+import com.example.tfgpruebita.ui.LoginRegister.Principal;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,6 +44,22 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        WebView webView = root.findViewById(R.id.webView);
+        webView.loadUrl("https://www.marca.com/");
+
+        Button btnCerrarSesion = root.findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+
+                Intent intent = new Intent(getActivity(), Principal.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
         Bundle args = getArguments();
         if (args != null) {
             correo = args.getString("correo");
@@ -60,20 +81,32 @@ public class HomeFragment extends Fragment {
     }
 
     private void seleccionEquipo() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Selecciona tu equipo favorito");
-        String[] equipos = {"Nacional", "Tolima", "Cali", "Once Caldas", "Junior", "Bucaramanga", "Santa Fe", "Equidad", "Pereira"};
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        String userId = user.getUid();
+        String equipoSeleccionado = sharedPreferences.getString(userId, null);
 
-        builder.setSingleChoiceItems(equipos, -1, (dialog, which) -> {
-            String equipoSeleccionado = equipos[which];
+        if (equipoSeleccionado != null) {
             actualizarImageUserSegunEquipo(equipoSeleccionado);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Selecciona tu equipo favorito");
+            String[] equipos = {"Nacional", "Tolima", "Cali", "Once Caldas", "Junior", "Bucaramanga", "Santa Fe", "Equidad", "Pereira"};
 
-            dialog.dismiss();
-        });
+            builder.setSingleChoiceItems(equipos, -1, (dialog, which) -> {
+                String equipo = equipos[which];
+                actualizarImageUserSegunEquipo(equipo);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(userId, equipo);
+                editor.apply();
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+                dialog.dismiss();
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
+
 
     private void actualizarImageUserSegunEquipo(String equipoSeleccionado) {
         switch (equipoSeleccionado) {
