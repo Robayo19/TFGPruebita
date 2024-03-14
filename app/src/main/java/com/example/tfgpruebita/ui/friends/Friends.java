@@ -62,9 +62,9 @@ public class Friends extends Fragment {
 
     Persona personaSeleccionada;
 
-    private static final String ICON_ADD_ID = "Añadir";
-    private static final String ICON_SAVE_ID = "Actualizar";
-    private static final String ICON_DELETE_ID = "Borrar";
+    private static final String AÑADIR = "Añadir";
+    private static final String ACTUALIZAR = "Actualizar";
+    private static final String ELIMINAR = "Borrar";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,7 +142,7 @@ public class Friends extends Fragment {
             String eleccion = item.getTitle().toString();
 
             switch (eleccion) {
-                case ICON_ADD_ID:
+                case AÑADIR:
                     if (validarCampos()) {
                         agregarPersona(nombre1, correo1, contra1);
                         Toast.makeText(requireContext(), "Agregar", Toast.LENGTH_LONG).show();
@@ -151,7 +151,7 @@ public class Friends extends Fragment {
                         Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_LONG).show();
                     }
                     break;
-                case ICON_SAVE_ID:
+                case ACTUALIZAR:
                     Persona p = new Persona();
                     if(personaSeleccionada != null && personaSeleccionada.getId() != null) {
                         p.setId(personaSeleccionada.getId());
@@ -166,7 +166,7 @@ public class Friends extends Fragment {
                     }
                     break;
 
-                case ICON_DELETE_ID:
+                case ELIMINAR:
                     if (personaSeleccionada != null && personaSeleccionada.getId() != null) {
                         eliminarPersona(personaSeleccionada.getId());
                         Toast.makeText(requireContext(), "Eliminar", Toast.LENGTH_LONG).show();
