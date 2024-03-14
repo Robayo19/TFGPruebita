@@ -27,8 +27,6 @@ public class Registro extends AppCompatActivity {
     private EditText nombreEditText, correoEditText, contrasenaEditText;
     private Button registroButton;
 
-    private Button btnVolver;
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -44,20 +42,11 @@ public class Registro extends AppCompatActivity {
         correoEditText = findViewById(R.id.correo);
         contrasenaEditText = findViewById(R.id.contrasena);
         registroButton = findViewById(R.id.registro);
-        btnVolver = findViewById(R.id.btnVolver);
 
         registroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 registrarUsuario();
-            }
-        });
-
-        btnVolver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Registro.this, Principal.class);
-                startActivity(intent);
             }
         });
     }

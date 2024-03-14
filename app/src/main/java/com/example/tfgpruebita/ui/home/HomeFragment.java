@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,6 @@ public class HomeFragment extends Fragment {
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    public static String equipoPasar;
 
     private String correo;
 
@@ -85,10 +83,9 @@ public class HomeFragment extends Fragment {
     private void seleccionEquipo() {
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         String userId = user.getUid();
-        String equipoSeleccionado = sharedPreferences.getString("equipo_favorito_" + userId, null);
+        String equipoSeleccionado = sharedPreferences.getString(userId, null);
 
         if (equipoSeleccionado != null) {
-            equipoPasar = equipoSeleccionado;
             actualizarImageUserSegunEquipo(equipoSeleccionado);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -99,9 +96,7 @@ public class HomeFragment extends Fragment {
                 String equipo = equipos[which];
                 actualizarImageUserSegunEquipo(equipo);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                Log.i("equipo: ", equipo);
-                equipoPasar = equipo;
-                editor.putString("equipo_favorito_" + userId, equipo);
+                editor.putString(userId, equipo);
                 editor.apply();
 
                 dialog.dismiss();
@@ -111,7 +106,6 @@ public class HomeFragment extends Fragment {
             dialog.show();
         }
     }
-
 
 
     private void actualizarImageUserSegunEquipo(String equipoSeleccionado) {
