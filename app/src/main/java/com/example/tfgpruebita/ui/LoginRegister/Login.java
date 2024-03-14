@@ -26,6 +26,8 @@ public class Login extends AppCompatActivity {
     private EditText nombreLoginEditText, contrasenaLoginEditText;
     private Button loginButton;
 
+    private Button btnVolver;
+
     public static String correoPasar;
 
     private FirebaseAuth mAuth;
@@ -40,11 +42,20 @@ public class Login extends AppCompatActivity {
         nombreLoginEditText = findViewById(R.id.nombreLogin);
         contrasenaLoginEditText = findViewById(R.id.contrasenaLogin);
         loginButton = findViewById(R.id.login);
+        btnVolver = findViewById(R.id.btnVolver2);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 iniciarSesion();
+            }
+        });
+
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, Principal.class);
+                startActivity(intent);
             }
         });
     }
